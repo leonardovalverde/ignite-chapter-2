@@ -1,13 +1,13 @@
 import logoImg from "../../assets/logo.svg";
-import { Container, Content } from "./styles";
+import * as Styled from "./styles";
 
 export function Header() {
-    return (
-        <Container>
-            <Content>
-                <img src={logoImg} alt="dt money" />{" "}
-                <button type="button">Nova transação</button>
-            </Content>
-        </Container>
-    );
+  return (
+    <Styled.Container>
+      <Styled.Content>
+        <img src={logoImg} alt="dt money" />{" "}
+        <button type="button">Nova transação</button>
+      </Styled.Content>
+    </Styled.Container>
+  );
 }
