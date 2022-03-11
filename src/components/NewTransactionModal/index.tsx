@@ -1,5 +1,9 @@
 import * as Styled from "./styles";
+import closeImg from "../../assets/close.svg";
+import incomeImg from "../../assets/income.svg";
+import outcomeImg from "../../assets/outcome.svg";
 import Modal from "react-modal";
+import { useState } from "react";
 
 interface NewTransactionModalProps {
   isOpen: boolean;
@@ -10,6 +14,8 @@ export function NewTransactionModal({
   isOpen,
   onRequestClose,
 }: NewTransactionModalProps) {
+  const [type, setType] = useState("deposit");
+
   return (
     <Modal
       isOpen={isOpen}
@@ -17,12 +23,43 @@ export function NewTransactionModal({
       overlayClassName="react-modal-overlay"
       className="react-modal-content"
     >
+      <button
+        type="button"
+        onClick={onRequestClose}
+        className="react-modal-close"
+      >
+        <img src={closeImg} alt="fechar modal" />
+      </button>
       <Styled.Form>
         <h2>Cadastrar transação</h2>
         <input type="text" placeholder="Título" />
         <input type="number" placeholder="Valor" />
+        <Styled.TransactionType>
+          <Styled.RadioBox
+            type="button"
+            isActive={type === "deposit"}
+            activeColor="green"
+            className={type === "deposit" ? "active" : ""}
+            onClick={() => {
+              setType("deposit");
+            }}
+          >
+            <img src={incomeImg} alt="Entrada" />
+            <span>Entrada</span>
+          </Styled.RadioBox>
+          <Styled.RadioBox
+            type="button"
+            isActive={type === "withdraw"}
+            activeColor="red"
+            onClick={() => {
+              setType("withdraw");
+            }}
+          >
+            <img src={outcomeImg} alt="Saída" />
+            <span>Saída</span>
+          </Styled.RadioBox>
+        </Styled.TransactionType>
         <input type="text" placeholder="Categoria" />
-
         <button type="submit">Cadastrar</button>
       </Styled.Form>
     </Modal>
