@@ -1,9 +1,10 @@
+import { FormEvent, useState } from "react";
 import * as Styled from "./styles";
 import closeImg from "../../assets/close.svg";
 import incomeImg from "../../assets/income.svg";
 import outcomeImg from "../../assets/outcome.svg";
 import Modal from "react-modal";
-import { useState } from "react";
+import { useTransactions } from "../../hooks/useTransactions";
 
 interface NewTransactionModalProps {
   isOpen: boolean;
@@ -14,7 +15,24 @@ export function NewTransactionModal({
   isOpen,
   onRequestClose,
 }: NewTransactionModalProps) {
+  const { createTransaction } = useTransactions();
+
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState(0);
+  const [category, setCategory] = useState("");
   const [type, setType] = useState("deposit");
+
+  async function handleCreateNewTransaction(event: FormEvent) {
+    event.preventDefault();
+
+    await createTransaction({ amount, category, title, type });
+
+    setTitle("");
+    setAmount(0);
+    setCategory("");
+    setType("deposit");
+    onRequestClose();
+  }
 
   return (
     <Modal
@@ -30,10 +48,20 @@ export function NewTransactionModal({
       >
         <img src={closeImg} alt="fechar modal" />
       </button>
-      <Styled.Form>
+      <Styled.Form onSubmit={handleCreateNewTransaction}>
         <h2>Cadastrar transação</h2>
-        <input type="text" placeholder="Título" />
-        <input type="number" placeholder="Valor" />
+        <input
+          type="text"
+          placeholder="Título"
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+        />
+        <input
+          type="number"
+          placeholder="Valor"
+          value={amount}
+          onChange={(event) => setAmount(Number(event.target.value))}
+        />
         <Styled.TransactionType>
           <Styled.RadioBox
             type="button"
@@ -59,7 +87,12 @@ export function NewTransactionModal({
             <span>Saída</span>
           </Styled.RadioBox>
         </Styled.TransactionType>
-        <input type="text" placeholder="Categoria" />
+        <input
+          type="text"
+          placeholder="Categoria"
+          value={category}
+          onChange={(event) => setCategory(event.target.value)}
+        />
         <button type="submit">Cadastrar</button>
       </Styled.Form>
     </Modal>
